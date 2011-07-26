@@ -1,0 +1,272 @@
+<html>
+<head>
+<style type="text/css">
+
+    #theo-banner {
+        height: 10%;
+        width: 100%;
+        overflow: hidden;
+        float: left;
+    }
+
+    #panel {
+        width: 100%;
+        overflow: hidden;
+        float: left;
+    }
+
+    .my-cell {
+        font-size: 12;
+        text-align: left;
+        vertical-align: top;
+    }
+
+</style>
+<title>EPEPT: A web service for enhanced P-value estimation in permutation tests</title>
+
+<link rel="stylesheet" type="text/css" href="/addama-html/js/ext-js/resources/css/ext-all.css">
+<script type="text/javascript" src="/addama-html/js/ext-js/adapter/ext/ext-base.js"></script>
+<script type="text/javascript" src="/addama-html/js/ext-js/ext-all.js"></script>
+
+<script type="text/javascript" src="http://www.google.com/jsapi"></script>
+<script type="text/javascript">
+    google.load("prototype", "1.6.0.3");
+    google.load("scriptaculous", "1.8.1");
+</script>
+<link rel="stylesheet" type="text/css" href="css/bot-views.css"/>
+<script type="text/javascript" src="js/header.js"></script>
+<script type="text/javascript" src="js/util.js"></script>
+<script type="text/javascript">
+
+//JSON variables  	description  	possible values  	default value  	warning when...  	error when...
+function showWSInput() {
+
+    var win2 = new Ext.Window({
+        id:'tblayout-win'
+        ,width:800
+        ,height:550
+        ,autoScroll: true
+        ,layout:'table'
+        ,layoutConfig:{columns:6}
+        ,border:false
+        ,closable:true
+        ,title:'Permutation Web Service Client Inputs'
+        ,defaults:{width:120, height:80, cellCls: 'my-cell'}
+        ,items:[
+            {
+                html: 'JSON variables',
+                cellCls: 'header'
+            },
+            {
+                html: 'Description',
+                cellCls: 'header'
+            },
+            {
+                html: 'Possible values',
+                cellCls: 'header'
+            },
+            {
+                html: 'Default value',
+                cellCls: 'header'
+            },
+            {
+                html: 'Warning when...',
+                cellCls: 'hdeader'
+            },
+            {
+                html: 'Error when...',
+                cellCls: 'header'
+            },
+            {
+                html: 'file'
+            },
+            {
+                html: 'Tab delimited text file containing original statistic and permutation values'
+            },
+            {
+                html: 'File name of a file that exist in the inputs directory'
+            },
+            {
+                html: 'N/A'
+            },
+            {
+                html: '&nbsp;'
+            },
+            {
+                html: 'File does not exist. Action: Matlab permutation scripts cannot be run; generate error message'
+            },
+            {
+                html: 'method'
+            },
+            {
+                html: 'Method to estimate generalized Pareto distribution'
+            },
+            {
+                html: 'PWM MOM ML'
+            },
+            {
+                html: 'PWM'
+            },
+            {
+                html: 'Variable does not exist, or value is not one of the possible values. Action: set  default value and generate warning message'
+            },
+            {
+                html: '&nbsp;'
+            },
+            {
+                html: 'ci_chk'
+            },
+            {
+                html: 'Check box for confidence interval computation'
+            },
+            {
+                html: 'true false'
+            },
+            {
+                html: 'true'
+            },
+            {
+                html: 'Variable does not exist, or value is not one of the possible values. Action: set  default value and generate warning message'
+            },
+            {
+                html: '&nbsp;'
+            },
+            {
+                html: 'ci'
+            },
+            {
+                html: 'Confidence interval'
+            },
+            {
+                html: 'String containing a numerical value between 1 and 99'
+            },
+            {
+                html: '95'
+            },
+            {
+                html: 'Variable does not exist, or value is not one of the possible values. Action: set  default value and generate warning message'
+            },
+            {
+                html: '&nbsp;'
+            },
+            {
+                html: 'oopt_chk'
+            },
+            {
+                html: 'Check box for optimal order preserving transform'
+            },
+            {
+                html: 'true false'
+            },
+            {
+                html: 'false'
+            },
+            {
+                html: 'Variable does not exist, or value is not one of the possible values. Action: set  default value and generate warning message'
+            },
+            {
+                html: '&nbsp;'
+            },
+            {
+                html: 'cc_chk'
+            },
+            {
+                html: 'Check box for convergence criterium'
+            },
+            {
+                html: 'true false'
+            },
+            {
+                html: 'false'
+            },
+            {
+                html: 'Variable does not exist, or value is not one of the possible values. Action: set  default value and generate warning message'
+            },
+            {
+                html: '&nbsp;'
+            }
+        ]
+        //html: "<br><a HREF='javascript:showExampleDataSets()'>Download Permutation Matrix File Example Datasets</a><br>"
+    });
+    win2.show();
+
+}
+
+function loadPanel() {
+    loadTheoBanner();
+    var script =
+            "<b>A web service for enhanced P-value estimation in permutation tests.</b><br>"
+            + "EPEPT Version 2.0, released December 1<sup>st</sup> 2010.<br><a href='http://bioinformatics.oxfordjournals.org/cgi/content/abstract/25/12/i161?eto' target='_blank'>Fewer Permutations, More Accurate <i>P</i>-Values</a><br>"
+            + getEPEPTContact()
+                    + "<br><b>Browser Settings:</b><br>The preferred browser is Firefox 3+, the application will also work with Safari, Chrome and Internet Explorer 6+. Caching needs to be turned off; particularly for Internet Explorer.<br>"
+                    + "Concering Internet Explorer:<br>"
+                    + "The default settings for cache handling must be changed in order for the EPEPT AJAX requests to work properly. <br>Only then will the page be automatically updated when the P-value estimation is completed, allowing the user to see and download the results. You can also filled in your email address where a results message will be sent upon EPEPT completion or error. <br>Take the following steps for Internet Explorer Caching Settings:<br>"
+                    + "Internet Options -> Temporary Internet Files Settings -> Checked for newer versions of stored pages -> Select 'Every visit to the page'<br>"
+                    + "The slider of the confidence interval does not display correctly. The confidence interval value can be typed in using the Confidence Interval text box below the slider.<br>"
+                    + "<br><b>Inputs:</b><br>"
+                    + "File with test statistics and permutation values <i> or </i> labeled dataset <a HREF='javascript:showExampleDataSets()'>Download Example Datasets</a><br>"
+                    + "The file should be a tab delimited text file, a comma separated text file or an Excel file. EPEPT checks the extension of the file to decide upon its format: Excel files should have the .xls or .xlsx extension and the data should be on the first sheet. Comma separated files should have the extension .csv. All files with other extensions are assumed to be tab delimited text files. "
+                    + "In the 'Permutation Values' setting, each column in the file should contain one test statistic and its corresponding permutation values. Since multiple columns are allowed, different events (e.g. different genes or gene sets) can be tested simultaneously, yet independently. The file is allowed to have one header row. In case of a header row, the test statistics should be on the second row. "
+                    + "In case no header row is used, the test statistics should be on the first row. All numerical values in the rows below the test statistic are assumed to be the permutation values. Non-numerical values, NaN's (not a number) and Inf's (infinite) are ignored. At least 1,000 permutation values per column should be reported in order for the tail estimation procedure to be used. "
+                    + "In the 'SAM' and 'GSEA' setting, each column should contain the expression levels of all genes in the dataset. The first row should contain the class labels or other response type assigned to the columns. Possible configurations of the first row should match the `resp.type' options of the <a href='http://cran.r-project.org/web/packages/samr/index.html' target='_blank'>samR</a> package. "
+                    + "(Also see Response Type parameter below.)  The first column can be used as a header column for the gene names.<br>"
+                + "<br><i>EPEPT Mode</i><br>"
+		        + "Three different modes are available. The default is Permutation Values, where the expected input is a matrix of permutation values. The second mode is SAM (Significance Analysis of Mircoarrays), which requires the user to upload a labeled microarray gene expression data set. EPEPT uses the <a href='http://cran.r-project.org/web/packages/samr/index.html' target='_blank'>samR</a> package to compute permutation values, which are subsequently used for P-value estimation. The third mode is GSEA (Gene Set Enrichment Analysis), which requires a labeled microarray gene expression data set and a file with gene sets in the .gmt format. In this case, EPEPT uses the <a href='http://cran.r-project.org/web/packages/GSA/index.html' target='_blank'>GSA</a> to compute permutation values, which are subsequently used for P-value estimation."     
+		 + "<br><br><i>Estimation method</i><br>"
+                    + "Three different methods are available to estimate the parameters of the generalized Pareto distribution (which models the tail of the distribution of the permutation values): probability weighted moments (PWM), maximum likelihood (ML) and method of moments (MOM). Using theoretical distributions and practical applications we found that all methods performed comparably to each other. Some studies have been done comparing these estimators, often favoring ML." 
+                    + "<br>See <a href='http://bioinformatics.oxfordjournals.org/cgi/content/abstract/25/12/i161?eto' target='_blank'>paper</a> for more details.<br><br>"
+                    + "<i>Confidence interval</i><br>"
+                    + "The confidence interval of the estimated P-value indicates the reliability of the estimate. The confidence interval is qualified by the confidence level (default 95%). Loosely speaking, the confidence level indicates how sure (e.g. 95% sure) we can be that the actual P-value is within the confidence interval. This level can be set between 10 and 99.<br><br>"
++ "<i>Confidence interval checkbox</i><br>"
++ "A flag determining whether the confidence interval should be computed or not.<br><br>"                    
++ "<i>Optimal order preserving transform checkbox</i><br>"
+                    + "A flag determining whether the optimal order preserving transform should be applied or not.<br><br>"
+                    + "<i>Convergence criteria checkbox</i><br>"
+                    + "A flag determining whether the convergence criteria should be applied or not.<br>"
++ "<br><i>Random seed</i><br>"
+                    + "If a numerical value between 1 and 1,000,000 is given, this will be used as a random seed allowing the user to reproduce EPEPT runs. When the (default) value 0 is selected, the random seed will be chosen arbitrarily.<br>"
+		+ "<br><i>Resp type:SAM/GSEA mode</i><br>"
+                    + "When EPEPT is used to generate permutation values in the 'SAM' or 'GSEA' setting, the user can choose the response type. The value must be one of the following: Quantitative, Two class unpaired, Two class paired, survival or Multiclass.<br>"
++ "<br><i>NPerms:SAM/GSEA mode</i><br>"
+                    + "When EPEPT is used to generate permutation values in the 'SAM' or 'GSEA' setting, the user can choose the number of permutations to be performed. In the 'SAM' setting the maximum is 1,000. (SAM evaluates the P-value of one gene using the permutation values of all genes, effectively multiplying the number of permutations used by the number of genes.) In the 'GSEA' setting the maximum is 10,000.<br>"
++ "<br><i>Geneset file:GSEA mode</i><br>"
+                    + "When EPEPT is used to generate permutation values in the 'GSEA' setting, a file with gene set annotations in gene matrix transposed (.gmt) format has to be given. Such a tab delimited text file contains one gene set per row. The first two columns contain the gene set ID and description. The following columns contain the genes for that particular gene set. The annotation of these genes should match the gene annotation in the header column of the gene expression data file.<br>"
++ "<br><i>GSEA statistic:GSEA mode</i><br>"
+                    + "When EPEPT is used to generate permutation values in the 'GSEA' setting, the user can choose the statistic used to summarize genesets. The value must be one of the following: maxmean, mean or absmean.<br>"
+		+ "<br><i>Email address</i><br>"
+                    + "A mail will be sent to this email address when the EPEPT run completes. This mail contains links to the results and logs. This email address is completely confidential and will not be used or shared with other systems and purposes.<br>"
+                    + "<br><b>Outputs:</b><br>"
+                    + "The main output of EPEPT are the estimated P-values. These are reported in a tab delimited text file. If headers were provided in the original file, the output file contains the same headers. If confidence intervals were requested the two rows under the row with the P-value estimates indicate the lower and upper bound of the confidence intervals. Finally, if the convergence criteria were applied another row is added with binary values indicating whether the estimate converged (1) or not (0).<br>Besides this text file, also two picture files (a .png and an .eps file) are generated that visually depict the estimated P-values and their confidence bounds."
+                    + "<br><br><A HREF='./perm_downloads.html'>EPEPT Source and Examples of Programmatic Access via Web Service</a><br>"
+
+                    + "<br><b>License and Disclaimer</b><br>"
+                    + "This software is licensed under the GNU Lesser General Public License (LGPL), which is a standard 'free software' and 'open source' license. <br>"
+                    + "Please be advised that the Institute for Systems Biology and the authors disclaim any liability stemming from the use of this software.";
+
+    var infoPanel = new Ext.Panel({
+        renderTo: 'panel',
+        frame:true,
+        defaults:{autoHeight: true},
+        items:[
+            {
+                html: script,
+                title: 'Manual'
+            }
+        ]
+    });
+    infoPanel.render();
+
+}
+
+Event.observe(window, "load", loadPanel);
+</script>
+</head>
+<body>
+<div id="theo-banner"></div>
+<hr/>
+<div id="panel"></div>
+<div id="table-matixid"></div>
+<div id="table-wsinputid"></div>
+
+</body>
+</html>
