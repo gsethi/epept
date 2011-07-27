@@ -13,11 +13,11 @@ function loadTheoBanner() {
     
     Ext.get("theo-banner").update("");
     var sharePanel = new Ext.Panel({
-        title: "<left>EPEPT - Addama Service</left>&nbsp;&nbsp;<right><a href='http://informatics.systemsbiology.net' target='_blank'>Research Informatics</a>&nbsp;&nbsp;&nbsp;<a href='http://www.systemsbiology.org' target='_blank'>Systems Biology</a></right>",
+        title: "<left>EPEPT Addama Service</left>&nbsp;&nbsp;<right><a href='http://shmulevich.systemsbiology.net/' target='_blank'>Informatics@Shmulevich Lab</a>&nbsp;&nbsp;&nbsp;<a href='http://www.systemsbiology.org' target='_blank'>Institute for Systems Biology</a></right>",
         id: 'header',
         border: true,
         deferredRender:false,
-        items: [{title:"<a HREF='./index.html'>HTML Input Form</a> &nbsp;&nbsp;<a href='permcomp_info.html'>Manual</a> &nbsp;&nbsp&nbsp;&nbsp;<a href='perm_downloads.html'>Source and Web Service Client Examples</a>", html: null}
+        items: [{title:"<a HREF='./index.html'>HTML Input Form</a> &nbsp;&nbsp;<a href='http://code.google.com/p/epept/wiki/Manual' target='_blank'>Manual</a> &nbsp;&nbsp&nbsp;&nbsp;<a href='http://code.google.com/p/epept/wiki/WebServiceClients' target='_blank'>Source and Web Service Client Examples</a>", html: null}
         ],
         renderTo: 'theo-banner'
     });

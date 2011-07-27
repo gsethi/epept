@@ -13,13 +13,12 @@
         float: left;
     }
     #input-panel {
-        width: 40%;
+	width: 40%;
         overflow: hidden;
         float: left;
     }
     #output-panel {
-        height: 7%;
-        width: 59%;
+        width: 60%;
         overflow: hidden;
         float: left;
     }
@@ -67,11 +66,11 @@ Ext.onReady(function() {
 	    uploadFormComponent = uploadForm.getUploadFileFormComponent();
     });
     var inputPanel = new Ext.Panel({
-        title: "EPEPT Inputs " + "<a href='permcomp_info.html' target='_blank'>Help</a>",
+        title: "EPEPT Inputs " + "<a href='http://code.google.com/p/epept/wiki/Manual' target='_blank'>Help</a>",
         id: 'inputPanelId',
         deferredRender:false,
         renderTo: "input-panel",
-        width:800,
+        width:600,
         header: true,
         items: [uploadFormComponent]
     });
@@ -368,7 +367,9 @@ function showLog(log, textArea) {
 <div id="error-div"></div>
 <div id="input-panel"></div>
 <div id="result-panel"></div>
-<hr/>
+
+
+
 <div id="output-panel" class="results"></div>
 <div id="results" class="results">
     <!--<div id="status"><h3>Pending</h3></div>-->
