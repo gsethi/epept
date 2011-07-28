@@ -113,11 +113,8 @@ function loadResults() {
     var resultsUri = get_parameter("URI");
     if (resultsUri) {
         Ext.Ajax.request({
-            url: resultsUri + "/structured",
+            url: resultsUri + "/structured?_dc=" + Math.random(),
             method: "get",
-            params: {
-                "_dc": Ext.id()
-            },
             success: function(o) {
                 var json = Ext.util.JSON.decode(o.responseText);
                 var inputs = null;
@@ -132,9 +129,8 @@ function loadResults() {
                     var updateUri = json.status.uri;
                     var updFn = function() {
                         Ext.Ajax.request({
-                            url: updateUri + "/structured",
+                            url: updateUri + "/structured?_dc=" + Math.random(),
                             method: "get",
-                            params: { "_dc": Ext.id() },
                             success: onUpdate
                         });
                     }
@@ -158,9 +154,8 @@ function onUpdate(o) {
                 if (jsonStatus.error != null || jsonStatus.completed != null) {
                                     updater.stopAutoRefresh();
                     Ext.Ajax.request({
-                            url: resultsUri + "/logs/timeout.txt",
+                            url: resultsUri + "/logs/timeout.txt?_dc=" + Math.random(),
                             method: "get",
-                            params: { "_dc": Ext.id() },
                              success: function(o) {
                                 timeCompleted = o.responseText;
                                 if (jsonStatus.error){
@@ -186,11 +181,8 @@ function onUpdate(o) {
 function showOutputs(resultsUri) {
     if (resultsUri) {
         Ext.Ajax.request({
-            url: resultsUri + "/structured",
+            url: resultsUri + "/structured?_dc=" + Math.random(),
             method: "get",
-            params: {
-                "_dc": Ext.id()
-            },
             success: function(o) {
                 var json = Ext.util.JSON.decode(o.responseText);
                 if (json) {
@@ -251,9 +243,8 @@ function showErrors(resultsUri, mode) {
     Ext.getDom("logs").style.display = "";
     if (resultsUri) {
         Ext.Ajax.request({
-            url: resultsUri + "/structured",
+            url: resultsUri + "/structured?_dc=" + Math.random(),
             method: "get",
-            params: { "_dc": Ext.id() },
             success: function(o) {
                 Ext.getDom("log_messages").innerHTML = "There were errors, here are the log outputs. Please email jlin@systemsbiology.org if you need more help<br><br>";
                 var json = Ext.util.JSON.decode(o.responseText);
@@ -288,10 +279,7 @@ function showErrors(resultsUri, mode) {
 function showResults(uri, labelsuri) {
     Ext.Ajax.request({
         method: "get",
-        url: uri,
-        params: {
-            "_dc": Ext.id()
-        },
+        url: uri + "?_dc=" + Math.random(),
         success: function(o) {
             var responseData = o.responseText;
             showLabelResults(labelsuri, responseData);
@@ -302,10 +290,7 @@ function showResults(uri, labelsuri) {
 function showLabelResults(labelsuri, responseData) {
     Ext.Ajax.request({
         method: "get",
-        url: labelsuri,
-        params: {
-            "_dc": Ext.id()
-        },
+        url: labelsuri + "?_dc=" + Math.random(),
         success: function(ol) {
             var labelData = ol.responseText;
             var myForm = new Ext.form.FormPanel({
@@ -341,9 +326,8 @@ function showLabelResults(labelsuri, responseData) {
 function showLog(log, textArea) {
     if (log && log.uri) {
         Ext.Ajax.request({
-            url: log.uri,
+            url: log.uri + "?_dc=" + Math.random(),
             method: "get",
-            params: { "_dc": Ext.id() },
             success: function(o) {
                 Ext.getDom(textArea).innerHTML = o.responseText;
             }
