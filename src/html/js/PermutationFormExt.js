@@ -195,7 +195,7 @@ Ext.override(Ext.form.RadioGroup, {
                         listeners: {click: //uploadFile handler
                                 function() {
                                     if (!validateInputs()) {
-                                        Ext.getDom("status").innerHTML = "<h3>Status: Failed validation</h3>" + new Date();
+                                        Ext.getDom("status").innerHTML = "<h3>Status: Invalid inputs, try again</h3>" + new Date();
                                         return false;
                                     }
                                     Ext.getDom("status").innerHTML = "<h3>Status: Begin Execution - uploading file </h3>" + new Date();

@@ -1,4 +1,5 @@
 var updater;
+var timeSubmitted = null;
 
 Ext.onReady(initPage);
 Ext.onReady(loadTheoBanner);
@@ -39,7 +40,7 @@ function loadTheoBanner() {
         border: true,
         deferredRender:false,
         items: [
-            { title:"<a href='http://shmulevich.systemsbiology.net/' target='_blank'>Informatics@Shmulevich Lab</a>&nbsp;&nbsp;&nbsp;<a href='http://www.systemsbiology.org' target='_blank'>Institute for Systems Biology</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href='./index.html'>HTML Input Form</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href='http://code.google.com/p/epept/wiki/Manual' target='_blank'>Manual</a> &nbsp;&nbsp&nbsp;&nbsp;<a href='http://code.google.com/p/epept/wiki/WebServiceClients' target='_blank'>Source and Web Service Client Examples</a>"  }
+            { title:"<a href='http://shmulevich.systemsbiology.net/' target='_blank'>Informatics@Shmulevich Lab</a>&nbsp;&nbsp;&nbsp;<a href='http://www.systemsbiology.org' target='_blank'>Institute for Systems Biology</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href='http://code.google.com/p/epept/wiki/Manual' target='_blank'>Manual</a>&nbsp;&nbsp&nbsp;&nbsp;<a href='http://code.google.com/p/epept/wiki/ExampleDatasets' target='_blank'>Example Datasets</a>&nbsp;&nbsp&nbsp;&nbsp;<a href='http://code.google.com/p/epept/wiki/WebServiceClients' target='_blank'>Source and Web Service Client Examples</a>"  }
         ],
         renderTo: 'theo-banner'
     });
@@ -124,8 +125,9 @@ function loadResults() {
                 }
                 if (json.status) {
                     var now = new Date();
-                    Ext.getDom("status").innerHTML = "<h3>Status: <font color='green'>EPEPT Running...</font></h3>Submitted: " + inputs["submitted"] + "<br>" + "Time now: " + now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
-
+		    timeSubmitted = inputs["submitted"];
+                    Ext.getDom("status").innerHTML = "<h3>Status: <font color='green'>EPEPT Running...</font></h3>Submitted: " + timeSubmitted + "<br>" + "Time now: " + now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
+		/*
                     var updateUri = json.status.uri;
                     var updFn = function() {
                         Ext.Ajax.request({
@@ -133,21 +135,22 @@ function loadResults() {
                             method: "get",
                             success: onUpdate
                         });
-                    }
+                    }*/
                     updater = new Ext.Updater("status");
-                    updater.startAutoRefresh(3);
-                    updater.on("update", updFn);
-                    updater.on("failure", updFn);
+   		    updater.setRenderer(renderObj);    
+		    updater.startAutoRefresh(2, json.status.uri + "/structured?_dc=" + Math.random());
+	
             }
         }
     });
   }
 }
 
-function onUpdate(o) {
+var renderObj = {"render":function(a, o){
+//function onUpdate(o) {
                 var jsonStatus = Ext.util.JSON.decode(o.responseText);
                 var now = new Date();
-                Ext.getDom("status").innerHTML = "<h3>Status: <font color='green'>EPEPT Running...</font></h3>Submitted: " + inputs["submitted"] + "<br>" + "Time now: " + now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
+                Ext.getDom("status").innerHTML = "<h3>Status: <font color='green'>EPEPT Running...</font></h3>Submitted: " + timeSubmitted + "<br>" + "Time now: " + now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
 
                 var timeCompleted = "";
                 var resultsUri = get_parameter("URI");
@@ -159,25 +162,26 @@ function onUpdate(o) {
                              success: function(o) {
                                 timeCompleted = o.responseText;
                                 if (jsonStatus.error){
-                                    Ext.getDom("status").innerHTML = "<h3>Status: Error</h3>Submitted on:" + inputs["submitted"] + " ended:" + timeCompleted + "<br>Msg:" + jsonStatus.error["message"];
+                                    Ext.getDom("status").innerHTML = "<h3>Status: Error</h3>Submitted on:" + timeSubmitted + " ended:" + timeCompleted + "<br>Msg:" + jsonStatus.error["message"];
                                             showErrors(resultsUri, inputs["mode"]);
                                 }else{
-                                    Ext.getDom("status").innerHTML = "<h3>Status: Completed</h3>Submitted on:" + inputs["submitted"] + " ended:" + timeCompleted;
-                                                    showOutputs(resultsUri);
+                         	           Ext.getDom("status").innerHTML = "<h3>Status: Completed</h3>Submitted on:" + timeSubmitted + " ended:" + timeCompleted;
+                                          
+		    	      showOutputs(resultsUri);
                                 }
                         }
                     });
                 }else if (jsonStatus.completed){
-                updater.stopAutoRefresh();
-                Ext.getDom("status").innerHTML = "<h3>Status: Completed</h3>Submitted on:" + inputs["submitted"] + " ended:" + timeCompleted;
-                showOutputs(resultsUri);
+                	updater.stopAutoRefresh();
+                	Ext.getDom("status").innerHTML = "<h3>Status: Completed</h3>Submitted on:" + timeSubmitted + " ended:" + timeCompleted;
+                	showOutputs(resultsUri);
                }else if (jsonStatus.running) {
-                                Ext.getDom("status").innerHTML = "<h3>Status: <font color='green'>Robot Running...</font></h3>Processing since: " + jsonStatus.inputs["submitted"];
+                                Ext.getDom("status").innerHTML = "<h3>Status: <font color='green'>Robot Running...</font></h3>Processing since: " + timeSubmitted;
                             } else if (jsonStatus.pending) {
-                                Ext.getDom("status").innerHTML = "<h3>Status: <font color='blue'>Robot Pending...</font></h3>Submitted at: " + jsonStatus.inputs["submitted"];
+                                Ext.getDom("status").innerHTML = "<h3>Status: <font color='blue'>Robot Pending...</font></h3>Submitted at: " + timeSubmitted;
                             }
 }
-
+}
 function showOutputs(resultsUri) {
     if (resultsUri) {
         Ext.Ajax.request({
@@ -287,27 +291,55 @@ function showResults(uri, labelsuri) {
     });
 }
 
+Ext.override(Ext.form.Field, {
+    adjustWidth : function(tag, w){
+        tag = tag.toLowerCase();
+        if(typeof w == 'number' && !Ext.isSafari){
+            if(Ext.isIE && (tag == 'input' || tag == 'textarea')){
+                if(!Ext.isStrict){
+                    return this.inEditor ? w : w - 3;
+                }
+                if(tag == 'input' && Ext.isStrict){
+                    return w - (Ext.isIE6 ? 4 : 1);
+                }
+                if(tag == 'textarea' && Ext.isStrict){
+                    return w-4;
+                }
+            }else if(Ext.isOpera && Ext.isStrict){
+                if(tag == 'input'){
+                    return w + 2;
+                }
+                if(tag == 'textarea'){
+                    return w-2;
+                }
+            }
+        }
+        return w;
+    }
+});
+
 function showLabelResults(labelsuri, responseData) {
     Ext.Ajax.request({
         method: "get",
         url: labelsuri + "?_dc=" + Math.random(),
         success: function(ol) {
             var labelData = ol.responseText;
-            var myForm = new Ext.form.FormPanel({
+	    var	 resultsPanel = new Ext.form.FormPanel({
                         renderTo:"resultspanel",
                         title:"EPEPT Results",
-                        width:425,
+                        width:525,
                         frame:true,
                         labelSeparator: "",
                         autoScroll:true,
                         items: [
                             new Ext.form.TextArea({
-                                        id: "aliasId",
+                                        id: "pvalueResultsId",
                                         fieldLabel: labelData,
                                         value: responseData,
                                         labelSeparator: "",
-                                        height: 80,
-                                        width: 1600,
+                                        anchor: '100% -30',
+					height: 200,
+                                        width: 1000,
                                         listeners: {
                                             render: function(c) {
                                                 Ext.QuickTips.register({
@@ -319,7 +351,7 @@ function showLabelResults(labelsuri, responseData) {
                                         }
                                     })
                          ]});
-        }
+		}
     });
 }
 
