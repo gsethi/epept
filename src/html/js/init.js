@@ -129,16 +129,19 @@ function loadResults() {
                     var now = new Date();
                     Ext.getDom("status").innerHTML = "<h3>Status: <font color='green'>EPEPT Running...</font></h3>Submitted: " + inputs["submitted"] + "<br>" + "Time now: " + now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
 
-                    updater = new Ext.Updater("status");
-                    updater.startAutoRefresh(3);
-                    updater.on("update", function() {
+                    var updateUri = json.status.uri;
+                    var updFn = function() {
                         Ext.Ajax.request({
-                            url: json.status.uri + "/structured",
+                            url: updateUri + "/structured",
                             method: "get",
                             params: { "_dc": Ext.id() },
                             success: onUpdate
                         });
-                    });
+                    }
+                    updater = new Ext.Updater("status");
+                    updater.startAutoRefresh(3);
+                    updater.on("update", updFn);
+                    updater.on("failure", updFn);
             }
         }
     });
