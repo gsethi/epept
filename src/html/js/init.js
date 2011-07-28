@@ -283,17 +283,20 @@ function showErrors(resultsUri, mode) {
 }
 
 function showResults(uri, labelsuri) {
-//    Ext.Ajax.request({
-//        method: "get",
-//        url: uri,
-//        params: {
-//            "_dc": Ext.id()
-//        },
-//        success: function(o) {
-//            var responseData = o.responseText;
-//        }
-//    });
+    Ext.Ajax.request({
+        method: "get",
+        url: uri,
+        params: {
+            "_dc": Ext.id()
+        },
+        success: function(o) {
+            var responseData = o.responseText;
+            showLabelResults(labelsuri, responseData);
+        }
+    });
+}
 
+function showLabelResults(labelsuri, responseData) {
     Ext.Ajax.request({
         method: "get",
         url: labelsuri,
