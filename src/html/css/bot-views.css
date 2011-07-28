@@ -1,0 +1,36 @@
+#theo-banner {
+    height: 10%;
+    width: 100%;
+    overflow: hidden;
+    float: left;
+}
+#status {
+    width: 100%;
+    overflow: hidden;
+    float: left;
+}
+#input-panel {
+width: 40%;
+    overflow: hidden;
+    float: left;
+}
+#output-panel {
+    width: 60%;
+    overflow: hidden;
+    float: left;
+}
+#status {
+    width: 59%;
+    overflow: auto;
+    float: left;
+}
+#outputs {
+    width: 59%;
+    overflow: auto;
+    float: left;
+}
+#logs {
+    width: 59%;
+    overflow: auto;
+    float: left;
+}

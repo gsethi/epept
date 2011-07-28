@@ -1,391 +1,42 @@
 <html>
 <head>
-<style type="text/css">
-    #theo-banner {
-        height: 10%;
-        width: 100%;
-        overflow: hidden;
-        float: left;
-    }
-    #status {
-        width: 100%;
-        overflow: hidden;
-        float: left;
-    }
-    #input-panel {
-	width: 40%;
-        overflow: hidden;
-        float: left;
-    }
-    #output-panel {
-        width: 60%;
-        overflow: hidden;
-        float: left;
-    }
-    #status {
-        width: 59%;
-        overflow: auto;
-        float: left;
-    }
-    #outputs {
-        width: 59%;
-        overflow: auto;
-        float: left;
-    }
-    #logs {
-        width: 59%;
-        overflow: auto;
-        float: left;
-    }
-</style>
-<title>EPEPT: A web service for enhanced P-value estimation in permutation tests</title>
-<script type="text/javascript" src="http://www.google.com/jsapi"></script>
-<script type="text/javascript">
-    google.load("prototype", "1.6.0.3");
-    google.load("scriptaculous", "1.8.1");
-</script>
-<link rel="stylesheet" type="text/css" href="js/extjs/resources/css/ext-all.css">
-<script type="text/javascript" src="js/extjs/adapter/ext/ext-base.js"></script>
-<script type="text/javascript" src="js/extjs/ext-all-debug.js"></script>
-<script type="text/javascript" src="js/JSON.js"></script>
-<script type="text/javascript" src="js/requestParameters.js"></script>
-<script type="text/javascript" src="js/header.js"></script>
-<script type="text/javascript" src="js/slidertip.js"></script>
-<script type="text/javascript" src="js/PermutationFormExt.js"></script>
+    <title>EPEPT: A web service for enhanced P-value estimation in permutation tests</title>
+    <link rel="stylesheet" type="text/css" href="https://informatics-apps.systemsbiology.net/addama/ui/ext-js-3.3.1/resources/css/ext-all.css">
+    <link rel="stylesheet" type="text/css" href="https://informatics-apps.systemsbiology.net/addama/ui/ext-js-3.3.1/examples/shared/examples.css"/>
 
-<link rel="stylesheet" type="text/css" href="css/bot-views.css"/>
-<script type="text/javascript">
-Ext.onReady(function() {
-//function loadInputPanel() {
-    loadTheoBanner();
-    Ext.QuickTips.init();
-    var action = '/addama-rest/primary-repo/path/RobotForms/EPEPT/form_entry/html';
-    var uploadFormComponent = null;
-    var uploadForm = Permutation_pvalue.html.FormExt;
-    uploadForm.init(action, function() {
-	    uploadFormComponent = uploadForm.getUploadFileFormComponent();
-    });
-    var inputPanel = new Ext.Panel({
-        title: "EPEPT Inputs " + "<a href='http://code.google.com/p/epept/wiki/Manual' target='_blank'>Help</a>",
-        id: 'inputPanelId',
-        deferredRender:false,
-        renderTo: "input-panel",
-        width:600,
-        header: true,
-        items: [uploadFormComponent]
-    });
-    inputPanel.render();
-    var outputPanel = new Ext.Panel({
-        title: "Status and Results",
-        id: 'outputPanelId',
-        deferredRender:false,
-        renderTo: "output-panel",
-        width:900,
-        header: true
-    });
-    outputPanel.render();
-    loadResults();	
-});
+    <script type="text/javascript" src="https://informatics-apps.systemsbiology.net/addama/ui/ext-js-3.3.1/adapter/ext/ext-base.js"></script>
+    <script type="text/javascript" src="https://informatics-apps.systemsbiology.net/addama/ui/ext-js-3.3.1/ext-all.js"></script>
 
-function loadPreviousInputs(inputs) {    	    
-    var mode = inputs.mode;
-    var uri = inputs.uri;
-    if (mode == undefined){
-    	mode = 'Permutation Values';
-    }
-    $("results_filename").innerHTML = "<b>Previous Inputs</b> <br>Data File:<a href=' " + uri + '/' + inputs.filename + "' target='_blank'>" + "&nbsp;" + inputs.filename + "</a>" ;
-    var method = inputs.method;
-    $("results_method").innerHTML = "Mode: " + mode + "<br>Method name: " + method;
-    var oopt = false;
-    if (inputs.oopt_chk == 'on') {
-        oopt = true;
-    }
-    var oopt_cb = new Ext.form.Checkbox({
-        boxLabel: "Enable 'Optimal Order Preserving Transformation (OOPT)'",
-        name: 'oopt_prev_chk',
-        id: 'oopt_prev_chk', 
-        checked: oopt,
-        renderTo: 'results_oopt'
-    });
-    oopt_cb.render();
-    var ci = false;
-    if (inputs.ci_chk == 'on') {
-        ci = true;
-        $("results_lower_bound").innerHTML = " Confidence Interval: " + inputs["ci"] + "%<br>";
-    } else {
-        $("results_lower_bound").innerHTML = " Confidence Interval Not Enabled<br>";
+    <script type="text/javascript" src="http://addama.googlecode.com/svn/branches/2.1/user-interfaces/src/main/html/addama/ui/console_handling.js"></script>
+    <script type="text/javascript" src="http://addama.googlecode.com/svn/branches/2.1/user-interfaces/src/main/html/addama/ui/query_parameters.js"></script>
 
-    }
-    var eci = new Ext.form.Checkbox({
-        boxLabel: "Enable Confidence Interval",
-	name: 'ci_prev_chk',
-        id: 'ci_prev_chk',
-        checked: ci,
-        renderTo: "results_ci"
-    });
-    eci.render();
-    var cc = false;
-    if (inputs.cc_chk == 'on') {
-        cc = true;
-    }        
-    var ecc = new Ext.form.Checkbox({
-        boxLabel: "Enable Convergence Criteria",
-	name: 'cc_prev_chk',
-        id: 'cc_prev_chk',
-        checked: cc,
-        renderTo: "results_cc"
-    });
-    ecc.render();
-    $("results_cc").insert("Random Seed: " + inputs.rseed );
-    $("results_cc").insert("<br>Email: " + inputs.mail_address );		
-    if (inputs.mode == 'SAM' || inputs.mode == 'GSEA'){
-    	$("results_cc").insert("<br>RespType: " + inputs.resptype );
-	$("results_cc").insert("<br>NPerms: " + inputs.nperms );
-	if (inputs.mode == 'GSEA'){
-        	$("results_cc").insert("<br>GSFile: " + "<a href=' " + uri + '/' + inputs.gsfile + "' target='_blank'>" + "&nbsp;" + inputs.gsfile + "</a>");
-       		$("results_cc").insert("<br>GSAMethod: " + inputs.gsa_method );
-    	}
-    }
-}
+    <script type="text/javascript" src="js/PermutationFormExt.js"></script>
+    <script type="text/javascript" src="js/init.js"></script>
 
-function loadResults() {
-    var startTime = new Date();
-    var rp = new RequestParameters();
-    var resultsUri = rp.getParameter("URI");
-    if (resultsUri) {
-        new Ajax.Request(resultsUri + "/structured", {
-            method: "get",
-            onSuccess: function(o) {
-                var json = o.responseJSON;
-		var inputs = null;
-                if (json) {
-                    inputs = json.inputs;
-                    loadPreviousInputs(inputs);
-                }
-                if (json.status) {
-			var now = new Date();
-			$("status").innerHTML = "<h3>Status: <font color='green'>EPEPT Running...</font></h3>Submitted: " + inputs["submitted"] + "<br>" + "Time now: " + now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
-                    var updater = new Ajax.PeriodicalUpdater("container-status-json", json.status.uri + "/structured", {
-                        method: "get",
-                        frequency: 3,
-                        decay: 2,
-                        requestHeaders: ['Expires', 'Mon, 26 Jul 1997 05:00:00 GMT', 'Cache-Control', 'max-age=0,no-cache,no-store,post-check=0,pre-check=0'],
-                        onSuccess: function(response) {
-                        	var jsonStatus = response.responseJSON;
-				var now = new Date();
-                        	$("status").innerHTML = "<h3>Status: <font color='green'>EPEPT Running...</font></h3>Submitted: " + inputs["submitted"] + "<br>" + "Time now: " + now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
+    <link rel="stylesheet" type="text/css" href="css/bot-views.css"/>
 
-				var timeCompleted = "";
-				if (jsonStatus.error != null || jsonStatus.completed != null) {
-                                	updater.stop();
-					new Ajax.Request(resultsUri + "/logs/timeout.txt", {
-			            	method: "get",
-            			    	onSuccess: function(o) {
-                		   		timeCompleted = o.responseText;
-						if (jsonStatus.error){
-	            					$("status").innerHTML = "<h3>Status: Error</h3>Submitted on:" + inputs["submitted"] + " ended:" + timeCompleted + "<br>Msg:" + jsonStatus.error["message"];
-                	                		showErrors(resultsUri, inputs["mode"]);
-						}else{
-							 $("status").innerHTML = "<h3>Status: Completed</h3>Submitted on:" + inputs["submitted"] + " ended:" + timeCompleted;
-                                                	showOutputs(resultsUri);
-						}
-					}
-					});
-			    }else if (jsonStatus.completed){
-				updater.stop();
-				$("status").innerHTML = "<h3>Status: Completed</h3>Submitted on:" + inputs["submitted"] + " ended:" + timeCompleted;
-				showOutputs(resultsUri);
-			   }else if (jsonStatus.running) {
-                                $("status").innerHTML = "<h3>Status: <font color='green'>Robot Running...</font></h3>Processing since: " + jsonStatus.inputs["submitted"];
-                            } else if (jsonStatus.pending) {
-                                $("status").innerHTML = "<h3>Status: <font color='blue'>Robot Pending...</font></h3>Submitted at: " + jsonStatus.inputs["submitted"];
-                            } 
-			}
-                    });
-            }
-        }
-    });
-  }
-}
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-24817532-2']);
+      _gaq.push(['_trackPageview']);
 
-function showOutputs(resultsUri) {
-    if (resultsUri) {
-        new Ajax.Request(resultsUri + "/structured", {
-            method: "get",
-            onSuccess: function(o) {
-                var json = o.responseJSON;
-                if (json) {
-                    var inputs = json.inputs;
-                    var outputs = json.outputs;
-                    var xls = false;
-                    var xlsx = false;
-                    var inputFile = inputs.filename;
-                    if (outputs) {
-                        var extensionIndex = inputFile.indexOf(".tsv");
-                        if (extensionIndex == -1){
-                           extensionIndex = inputFile.indexOf(".csv");
-                        }
-			if (extensionIndex == -1){
-                           extensionIndex = inputFile.indexOf(".txt");
-                        }
-                        if (extensionIndex == -1){
-                           extensionIndex = inputFile.indexOf(".xlsx");
-                           if (extensionIndex != -1){
-                             xlsx = true;
-                           }
-                        }
-                        if (extensionIndex == -1){
-                           xls = true;
-                           extensionIndex = inputFile.indexOf(".xls");
-                        }
-                        var outfileName = inputFile.substring(0, extensionIndex);
-                        if (xls){
-                           outfileName = outfileName + "_xls_";
-                        }
-                        if (xlsx){                        
-                           outfileName = outfileName + "_xlsx_";
-                        }
-outfileName = outfileName + ".txt"; 
-                        var fileUri = "/Pvalues_" + outfileName;
-                        var labelsUri = "/labels_" + outfileName;
-                        var uri = outputs.uri;
-                        var fileout = uri + fileUri;
-                        var labelsout = uri + labelsUri;
-                        var filepng = uri + "/plot.png";
-                        var fileeps = uri + "/plot.eps";
-                        $("imageContent").innerHTML = "<a href='" + fileeps + "'>Save Histogram as EPS format</a> "
-                                + "&nbsp; <a href='" + filepng + "'><img src='" + filepng + "' title='Histogram" + "' width='15%' heigth='15%'></a><br><br>";
-                        $("downloadLink").innerHTML = "<a href='" + fileout + "'>P-Values Result (right click to save)</a>";
-                        showResults(fileout, labelsout);
-                    }
-                }
-            }
-        });
-    }
-}
-
-function showErrors(resultsUri, mode) {
-    var mymode = mode;
-    $("resultsContent").innerHTML = "";
-    $("stdoutContent").innerHTML = "";
-    $("stderrContent").innerHTML = "";
-    $("logs").style.display = "";
-    if (resultsUri) {
-        new Ajax.Request(resultsUri + "/structured", {
-            method: "get",
-            onSuccess: function(o) {
-                $("log_messages").innerHTML = "There were errors, here are the log outputs. Please email jlin@systemsbiology.org if you need more help<br><br>";
-                var json = o.responseJSON;
-                if (json) {
-                    var logs = json.logs;
-                    if (logs) {
-                        showLog(logs["error.log"], "stdoutContent");
-                        showLog(logs["stderr.txt"], "stderrContent");
-			if (mymode == 'SAM'){
-				$("samlog").innerHTML = "<a href=' " + resultsUri + "/logs/samR.log'"  + ">" + "&nbsp;samR.log"  + "</a>";
-			}
-			if (mymode == 'GSEA'){
-				var gsalogs = "";
-				if (logs["gseaR1.log"] != null){
-					gsalogs  = gsalogs + "<a href=' " + resultsUri + "/logs/gseaR1.log'"  + ">" + "&nbsp;gseaR1.log"  + "</a>";
-				}
-				if (logs["gseaR2.log"] != null){
-                                        gsalogs  = gsalogs + "<br><a href=' " + resultsUri + "/logs/gseaR2.log'"  + ">" + "&nbsp;gseaR2.log"  + "</a>";
-                                }
-				if (logs["gseaR3.log"] != null){
-                                        gsalogs  = gsalogs + "<br><a href=' " + resultsUri + "/logs/gseaR3.log'"  + ">" + "&nbsp;gseaR3.log"  + "</a>";
-                                }
-                                $("gsealog").innerHTML = gsalogs;
-                        }
-                    }
-                }
-            }
-        });
-    } 
-}
-
-function showResults(uri, labelsuri) {
-new Ajax.Request(uri, {
-        method: "get",
-        onSuccess: function(o) {
-            var responseData = o.responseText;    
-            new Ajax.Request(labelsuri, {
-            method:"get",
-            onSuccess: function(ol) {
-               var labelData = ol.responseText;
-               var myForm = new Ext.form.FormPanel({
-                  renderTo:"resultspanel",
-                  title:"EPEPT Results <font size=-2>(if blank, try refreshing page</font>)",
-                  width:425,
-                  frame:true,
-                  labelSeparator: "",
-                  autoScroll:true,
-                  items: [new Ext.form.TextArea({
-                            id: "aliasId",
-                            fieldLabel: labelData,
-                            value: responseData,
-                            labelSeparator: "",
-                            height: 80,
-                            width: 1600,
- listeners: {
-                render: function(c) {
-                    Ext.QuickTips.register({
-                        target: c,
-                        title: '',
-                        text: labelData
-                    });
-                }
-            }
-               })]
-              });
-            }
-          });
-         }
-    });
-}
-
-function showLog(log, textArea) {
-    if (log && log.uri) {
-        new Ajax.Request(log.uri, {
-            method: "get",
-            onSuccess: function(o) {
-                $(textArea).innerHTML = o.responseText;
-            }
-        });
-    } else {
-        $(textArea).innerHTML = "Unable to display log, refresh page to retry getting logs";
-    }
-}
-//Event.observe(window, "load", loadInputPanel);
-//Event.observe(window, "load", loadResults);
-
-</script>
-<script type="text/javascript">
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-24817532-2']);
-  _gaq.push(['_trackPageview']);
-
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
-</script>
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
 </head>
 <body>
-
+<img src="images/banner.png" alt="EPEPT - Institute for Systems Biology"/>
 <div id="theo-banner"></div>
-<div id="error-div"></div>
 <div id="input-panel"></div>
 <div id="result-panel"></div>
 
-
-
 <div id="output-panel" class="results"></div>
 <div id="results" class="results">
-    <!--<div id="status"><h3>Pending</h3></div>-->
     <div id="inputs">
-        <div id="status"><h3>Status: Awaiting Input<br><br></h3></div>
+        <div id="status"><h3><br><br></h3></div>
         <div id="execution_time"></div>
         <br/>
         <div id="results_filename"></div>

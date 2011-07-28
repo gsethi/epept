@@ -1,5 +1,9 @@
 Ext.namespace('Permutation_pvalue.html');
 
+Ext.sequence(Ext.form.SliderField.prototype, 'setValue', function() {
+	this.fireEvent('change', this, this.getValue());
+});
+
 Permutation_pvalue.html.FormExt = function() {
     Ext.QuickTips.init();
     Ext.form.Field.prototype.msgTarget = 'side';
@@ -335,7 +339,7 @@ Ext.override(Ext.form.RadioGroup, {
                                     }
                                 }
                             }),
-                            new Ext.Slider({
+                            new Ext.form.SliderField({
                                 fieldLabel: 'Interval Slider',
                                 name: 'ci_slider',
                                 id: 'ci_slider',
@@ -344,16 +348,11 @@ Ext.override(Ext.form.RadioGroup, {
                                 value: 95,
                                 minValue: 10,
                                 maxValue: 99,
-                                plugins: new Ext.ux.SliderTip(),
+                                plugins: new Ext.slider.Tip(),
                                 listeners: {
-                                    dragend:
-                                            function() {
-                                            Ext.getCmp("ciId").setValue(this.getValue());
-                                            },
-                                    change:
-                                            function() {
-                                            Ext.getCmp("ciId").setValue(this.getValue());
-                                            }
+                                    change: function(fld, newValue) {
+                                            Ext.getCmp("ciId").setValue(newValue);
+                                    }
                                 }
                             }),
                             new Ext.form.TextField({
