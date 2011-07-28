@@ -49,9 +49,9 @@ function loadPreviousInputs(inputs) {
     if (mode == undefined){
         mode = 'Permutation Values';
     }
-    $("results_filename").innerHTML = "<b>Previous Inputs</b> <br>Data File:<a href=' " + uri + '/' + inputs.filename + "' target='_blank'>" + "&nbsp;" + inputs.filename + "</a>" ;
+    Ext.getDom("results_filename").innerHTML = "<b>Previous Inputs</b> <br>Data File:<a href=' " + uri + '/' + inputs.filename + "' target='_blank'>" + "&nbsp;" + inputs.filename + "</a>" ;
     var method = inputs.method;
-    $("results_method").innerHTML = "Mode: " + mode + "<br>Method name: " + method;
+    Ext.getDom("results_method").innerHTML = "Mode: " + mode + "<br>Method name: " + method;
     var oopt = false;
     if (inputs.oopt_chk == 'on') {
         oopt = true;
@@ -67,9 +67,9 @@ function loadPreviousInputs(inputs) {
     var ci = false;
     if (inputs.ci_chk == 'on') {
         ci = true;
-        $("results_lower_bound").innerHTML = " Confidence Interval: " + inputs["ci"] + "%<br>";
+        Ext.getDom("results_lower_bound").innerHTML = " Confidence Interval: " + inputs["ci"] + "%<br>";
     } else {
-        $("results_lower_bound").innerHTML = " Confidence Interval Not Enabled<br>";
+        Ext.getDom("results_lower_bound").innerHTML = " Confidence Interval Not Enabled<br>";
 
     }
     var eci = new Ext.form.Checkbox({
@@ -92,14 +92,16 @@ function loadPreviousInputs(inputs) {
         renderTo: "results_cc"
     });
     ecc.render();
-    $("results_cc").insert("Random Seed: " + inputs.rseed );
-    $("results_cc").insert("<br>Email: " + inputs.mail_address );
+
+    var results_cc = Ext.get("results_cc");
+    results_cc.insert("Random Seed: " + inputs.rseed );
+    results_cc.insert("<br>Email: " + inputs.mail_address );
     if (inputs.mode == 'SAM' || inputs.mode == 'GSEA'){
-        $("results_cc").insert("<br>RespType: " + inputs.resptype );
-    $("results_cc").insert("<br>NPerms: " + inputs.nperms );
+        results_cc.insert("<br>RespType: " + inputs.resptype );
+        results_cc.insert("<br>NPerms: " + inputs.nperms );
     if (inputs.mode == 'GSEA'){
-            $("results_cc").insert("<br>GSFile: " + "<a href=' " + uri + '/' + inputs.gsfile + "' target='_blank'>" + "&nbsp;" + inputs.gsfile + "</a>");
-            $("results_cc").insert("<br>GSAMethod: " + inputs.gsa_method );
+            results_cc.insert("<br>GSFile: " + "<a href=' " + uri + '/' + inputs.gsfile + "' target='_blank'>" + "&nbsp;" + inputs.gsfile + "</a>");
+            results_cc.insert("<br>GSAMethod: " + inputs.gsa_method );
         }
     }
 }
@@ -123,7 +125,7 @@ function loadResults() {
                 }
                 if (json.status) {
                     var now = new Date();
-                    $("status").innerHTML = "<h3>Status: <font color='green'>EPEPT Running...</font></h3>Submitted: " + inputs["submitted"] + "<br>" + "Time now: " + now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
+                    Ext.getDom("status").innerHTML = "<h3>Status: <font color='green'>EPEPT Running...</font></h3>Submitted: " + inputs["submitted"] + "<br>" + "Time now: " + now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
 
                     var updater = new Ext.Updater("status");
                     updater.startAutoRefresh(3, json.status.uri + "/structured", { "_dc": Ext.id() });
@@ -137,7 +139,7 @@ function loadResults() {
 function onUpdate(el, o) {
                 var jsonStatus = Ext.util.JSON.decode(o.responseText);
                 var now = new Date();
-                $(el).innerHTML = "<h3>Status: <font color='green'>EPEPT Running...</font></h3>Submitted: " + inputs["submitted"] + "<br>" + "Time now: " + now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
+                Ext.getDom(el).innerHTML = "<h3>Status: <font color='green'>EPEPT Running...</font></h3>Submitted: " + inputs["submitted"] + "<br>" + "Time now: " + now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
 
                 var timeCompleted = "";
                 if (jsonStatus.error != null || jsonStatus.completed != null) {
@@ -149,22 +151,22 @@ function onUpdate(el, o) {
                              success: function(o) {
                                 timeCompleted = o.responseText;
                                 if (jsonStatus.error){
-                                    $(el).innerHTML = "<h3>Status: Error</h3>Submitted on:" + inputs["submitted"] + " ended:" + timeCompleted + "<br>Msg:" + jsonStatus.error["message"];
+                                    Ext.getDom(el).innerHTML = "<h3>Status: Error</h3>Submitted on:" + inputs["submitted"] + " ended:" + timeCompleted + "<br>Msg:" + jsonStatus.error["message"];
                                             showErrors(resultsUri, inputs["mode"]);
                                 }else{
-                                    $(el).innerHTML = "<h3>Status: Completed</h3>Submitted on:" + inputs["submitted"] + " ended:" + timeCompleted;
+                                    Ext.getDom(el).innerHTML = "<h3>Status: Completed</h3>Submitted on:" + inputs["submitted"] + " ended:" + timeCompleted;
                                                     showOutputs(resultsUri);
                                 }
                         }
                     });
                 }else if (jsonStatus.completed){
                 updater.stop();
-                $(el).innerHTML = "<h3>Status: Completed</h3>Submitted on:" + inputs["submitted"] + " ended:" + timeCompleted;
+                Ext.getDom(el).innerHTML = "<h3>Status: Completed</h3>Submitted on:" + inputs["submitted"] + " ended:" + timeCompleted;
                 showOutputs(resultsUri);
                }else if (jsonStatus.running) {
-                                $(el).innerHTML = "<h3>Status: <font color='green'>Robot Running...</font></h3>Processing since: " + jsonStatus.inputs["submitted"];
+                                Ext.getDom(el).innerHTML = "<h3>Status: <font color='green'>Robot Running...</font></h3>Processing since: " + jsonStatus.inputs["submitted"];
                             } else if (jsonStatus.pending) {
-                                $(el).innerHTML = "<h3>Status: <font color='blue'>Robot Pending...</font></h3>Submitted at: " + jsonStatus.inputs["submitted"];
+                                Ext.getDom(el).innerHTML = "<h3>Status: <font color='blue'>Robot Pending...</font></h3>Submitted at: " + jsonStatus.inputs["submitted"];
                             }
 }
 
@@ -217,9 +219,9 @@ function showOutputs(resultsUri) {
                         var labelsout = uri + labelsUri;
                         var filepng = uri + "/plot.png";
                         var fileeps = uri + "/plot.eps";
-                        $("imageContent").innerHTML = "<a href='" + fileeps + "'>Save Histogram as EPS format</a> "
+                        Ext.getDom("imageContent").innerHTML = "<a href='" + fileeps + "'>Save Histogram as EPS format</a> "
                                 + "&nbsp; <a href='" + filepng + "'><img src='" + filepng + "' title='Histogram" + "' width='15%' heigth='15%'></a><br><br>";
-                        $("downloadLink").innerHTML = "<a href='" + fileout + "'>P-Values Result (right click to save)</a>";
+                        Ext.getDom("downloadLink").innerHTML = "<a href='" + fileout + "'>P-Values Result (right click to save)</a>";
                         showResults(fileout, labelsout);
                     }
                 }
@@ -230,17 +232,17 @@ function showOutputs(resultsUri) {
 
 function showErrors(resultsUri, mode) {
     var mymode = mode;
-    $("resultsContent").innerHTML = "";
-    $("stdoutContent").innerHTML = "";
-    $("stderrContent").innerHTML = "";
-    $("logs").style.display = "";
+    Ext.getDom("resultsContent").innerHTML = "";
+    Ext.getDom("stdoutContent").innerHTML = "";
+    Ext.getDom("stderrContent").innerHTML = "";
+    Ext.getDom("logs").style.display = "";
     if (resultsUri) {
         Ext.Ajax.request({
             url: resultsUri + "/structured",
             method: "get",
             params: { "_dc": Ext.id() },
             success: function(o) {
-                $("log_messages").innerHTML = "There were errors, here are the log outputs. Please email jlin@systemsbiology.org if you need more help<br><br>";
+                Ext.getDom("log_messages").innerHTML = "There were errors, here are the log outputs. Please email jlin@systemsbiology.org if you need more help<br><br>";
                 var json = Ext.util.JSON.decode(o.responseText);
                 if (json) {
                     var logs = json.logs;
@@ -248,7 +250,7 @@ function showErrors(resultsUri, mode) {
                         showLog(logs["error.log"], "stdoutContent");
                         showLog(logs["stderr.txt"], "stderrContent");
             if (mymode == 'SAM'){
-                $("samlog").innerHTML = "<a href=' " + resultsUri + "/logs/samR.log'"  + ">" + "&nbsp;samR.log"  + "</a>";
+                Ext.getDom("samlog").innerHTML = "<a href=' " + resultsUri + "/logs/samR.log'"  + ">" + "&nbsp;samR.log"  + "</a>";
             }
             if (mymode == 'GSEA'){
                 var gsalogs = "";
@@ -261,7 +263,7 @@ function showErrors(resultsUri, mode) {
                 if (logs["gseaR3.log"] != null){
                                         gsalogs  = gsalogs + "<br><a href=' " + resultsUri + "/logs/gseaR3.log'"  + ">" + "&nbsp;gseaR3.log"  + "</a>";
                                 }
-                                $("gsealog").innerHTML = gsalogs;
+                                Ext.getDom("gsealog").innerHTML = gsalogs;
                         }
                     }
                 }
@@ -327,10 +329,10 @@ function showLog(log, textArea) {
             method: "get",
             params: { "_dc": Ext.id() },
             success: function(o) {
-                $(textArea).innerHTML = o.responseText;
+                Ext.getDom(textArea).innerHTML = o.responseText;
             }
         });
     } else {
-        $(textArea).innerHTML = "Unable to display log, refresh page to retry getting logs";
+        Ext.getDom(textArea).innerHTML = "Unable to display log, refresh page to retry getting logs";
     }
 }

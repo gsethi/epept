@@ -69,14 +69,14 @@ Ext.override(Ext.form.RadioGroup, {
         try {
 	    var pass = true;
 	    var msg = "";	
-            var file = $("filename").value;
+            var file = Ext.getDom("filename").value;
             if (!file) {
                 msg = "Data matrix file is required for all EPEPT modes";
                 pass = false;
             }
 	    var val = uploadFileFormComponent.getForm().getValues()["mode"];
 	    if (val == 'GSEA'){
-	    	var gseafile = $("gsfile").value;
+	    	var gseafile = Ext.getDom("gsfile").value;
 		if (!gseafile){
 			pass = false;
 			msg = "<br>GSEA mode requires a gene expression file";
@@ -103,7 +103,7 @@ Ext.override(Ext.form.RadioGroup, {
 	    }
 		   		Ext.Msg.show({
                                                         title      : 'EPEPT Submission',
-                                                        msg        : "EPEPT is processing, once data files are uploaded, this web page will refresh itself until the EPEPT completes or encounters an error. An email with a results URI will be sent to " + $("mail_address").value + " if an valid address was entered.",
+                                                        msg        : "EPEPT is processing, once data files are uploaded, this web page will refresh itself until the EPEPT completes or encounters an error. An email with a results URI will be sent to " + Ext.getDom("mail_address").value + " if an valid address was entered.",
                                                         width      : 300,
                                                         icon       : Ext.MessageBox.INFO
                                              });
@@ -195,13 +195,13 @@ Ext.override(Ext.form.RadioGroup, {
                         listeners: {click: //uploadFile handler
                                 function() {
                                     if (!validateInputs()) {
-                                        $("status").innerHTML = "<h3>Status: Failed validation</h3>" + new Date();
+                                        Ext.getDom("status").innerHTML = "<h3>Status: Failed validation</h3>" + new Date();
                                         return false;
                                     }
-                                    $("status").innerHTML = "<h3>Status: Begin Execution - uploading file </h3>" + new Date();
-                                    $("stdout").innerHTML = "";
+                                    Ext.getDom("status").innerHTML = "<h3>Status: Begin Execution - uploading file </h3>" + new Date();
+                                    Ext.getDom("stdout").innerHTML = "";
                                     var O = Ext.getCmp('uploadFileForm');
-                                    $("show-button").disabled = true;
+                                    Ext.getDom("show-button").disabled = true;
                                     if (O.getForm().isValid()) {
                                         if (O.url){
 						O.getForm().getEl().dom.action = O.url;
