@@ -1,4 +1,4 @@
-var updater = new Ext.Updater("status");
+var updater;
 
 Ext.onReady(initPage);
 Ext.onReady(loadTheoBanner);
@@ -129,7 +129,7 @@ function loadResults() {
                     var now = new Date();
                     Ext.getDom("status").innerHTML = "<h3>Status: <font color='green'>EPEPT Running...</font></h3>Submitted: " + inputs["submitted"] + "<br>" + "Time now: " + now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
 
-
+                    updater = new Ext.Updater("status");
                     updater.startAutoRefresh(3);
                     updater.on("update", function() {
                         Ext.Ajax.request({
@@ -151,6 +151,7 @@ function onUpdate(o) {
                 Ext.getDom("status").innerHTML = "<h3>Status: <font color='green'>EPEPT Running...</font></h3>Submitted: " + inputs["submitted"] + "<br>" + "Time now: " + now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
 
                 var timeCompleted = "";
+                var resultsUri = get_parameter("URI");
                 if (jsonStatus.error != null || jsonStatus.completed != null) {
                                     updater.stopAutoRefresh();
                     Ext.Ajax.request({
