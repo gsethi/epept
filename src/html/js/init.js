@@ -1,3 +1,5 @@
+var updater = new Ext.Updater("status");
+
 Ext.onReady(initPage);
 Ext.onReady(loadTheoBanner);
 
@@ -93,15 +95,15 @@ function loadPreviousInputs(inputs) {
     });
     ecc.render();
 
-    var results_cc = Ext.get("results_cc");
-    results_cc.insert("Random Seed: " + inputs.rseed );
-    results_cc.insert("<br>Email: " + inputs.mail_address );
+    var results_cc = Ext.getDom("results_cc");
+    results_cc.innerHTML = "Random Seed: " + inputs.rseed ;
+    results_cc.innerHTML += "<br>Email: " + inputs.mail_address ;
     if (inputs.mode == 'SAM' || inputs.mode == 'GSEA'){
-        results_cc.insert("<br>RespType: " + inputs.resptype );
-        results_cc.insert("<br>NPerms: " + inputs.nperms );
+        results_cc.innerHTML += "<br>RespType: " + inputs.resptype ;
+        results_cc.innerHTML += "<br>NPerms: " + inputs.nperms ;
     if (inputs.mode == 'GSEA'){
-            results_cc.insert("<br>GSFile: " + "<a href=' " + uri + '/' + inputs.gsfile + "' target='_blank'>" + "&nbsp;" + inputs.gsfile + "</a>");
-            results_cc.insert("<br>GSAMethod: " + inputs.gsa_method );
+            results_cc.innerHTML += "<br>GSFile: " + "<a href=' " + uri + '/' + inputs.gsfile + "' target='_blank'>" + "&nbsp;" + inputs.gsfile + "</a>";
+            results_cc.innerHTML += "<br>GSAMethod: " + inputs.gsa_method ;
         }
     }
 }
@@ -127,23 +129,30 @@ function loadResults() {
                     var now = new Date();
                     Ext.getDom("status").innerHTML = "<h3>Status: <font color='green'>EPEPT Running...</font></h3>Submitted: " + inputs["submitted"] + "<br>" + "Time now: " + now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
 
-                    var updater = new Ext.Updater("status");
-                    updater.startAutoRefresh(3, json.status.uri + "/structured", { "_dc": Ext.id() });
-                    mgr.on("update", onUpdate);
+
+                    updater.startAutoRefresh(3);
+                    updater.on("update", function() {
+                        Ext.Ajax.request({
+                            url: json.status.uri + "/structured",
+                            method: "get",
+                            params: { "_dc": Ext.id() },
+                            success: onUpdate
+                        });
+                    });
             }
         }
     });
   }
 }
 
-function onUpdate(el, o) {
+function onUpdate(o) {
                 var jsonStatus = Ext.util.JSON.decode(o.responseText);
                 var now = new Date();
-                Ext.getDom(el).innerHTML = "<h3>Status: <font color='green'>EPEPT Running...</font></h3>Submitted: " + inputs["submitted"] + "<br>" + "Time now: " + now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
+                Ext.getDom("status").innerHTML = "<h3>Status: <font color='green'>EPEPT Running...</font></h3>Submitted: " + inputs["submitted"] + "<br>" + "Time now: " + now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
 
                 var timeCompleted = "";
                 if (jsonStatus.error != null || jsonStatus.completed != null) {
-                                    updater.stop();
+                                    updater.stopAutoRefresh();
                     Ext.Ajax.request({
                             url: resultsUri + "/logs/timeout.txt",
                             method: "get",
@@ -151,22 +160,22 @@ function onUpdate(el, o) {
                              success: function(o) {
                                 timeCompleted = o.responseText;
                                 if (jsonStatus.error){
-                                    Ext.getDom(el).innerHTML = "<h3>Status: Error</h3>Submitted on:" + inputs["submitted"] + " ended:" + timeCompleted + "<br>Msg:" + jsonStatus.error["message"];
+                                    Ext.getDom("status").innerHTML = "<h3>Status: Error</h3>Submitted on:" + inputs["submitted"] + " ended:" + timeCompleted + "<br>Msg:" + jsonStatus.error["message"];
                                             showErrors(resultsUri, inputs["mode"]);
                                 }else{
-                                    Ext.getDom(el).innerHTML = "<h3>Status: Completed</h3>Submitted on:" + inputs["submitted"] + " ended:" + timeCompleted;
+                                    Ext.getDom("status").innerHTML = "<h3>Status: Completed</h3>Submitted on:" + inputs["submitted"] + " ended:" + timeCompleted;
                                                     showOutputs(resultsUri);
                                 }
                         }
                     });
                 }else if (jsonStatus.completed){
-                updater.stop();
-                Ext.getDom(el).innerHTML = "<h3>Status: Completed</h3>Submitted on:" + inputs["submitted"] + " ended:" + timeCompleted;
+                updater.stopAutoRefresh();
+                Ext.getDom("status").innerHTML = "<h3>Status: Completed</h3>Submitted on:" + inputs["submitted"] + " ended:" + timeCompleted;
                 showOutputs(resultsUri);
                }else if (jsonStatus.running) {
-                                Ext.getDom(el).innerHTML = "<h3>Status: <font color='green'>Robot Running...</font></h3>Processing since: " + jsonStatus.inputs["submitted"];
+                                Ext.getDom("status").innerHTML = "<h3>Status: <font color='green'>Robot Running...</font></h3>Processing since: " + jsonStatus.inputs["submitted"];
                             } else if (jsonStatus.pending) {
-                                Ext.getDom(el).innerHTML = "<h3>Status: <font color='blue'>Robot Pending...</font></h3>Submitted at: " + jsonStatus.inputs["submitted"];
+                                Ext.getDom("status").innerHTML = "<h3>Status: <font color='blue'>Robot Pending...</font></h3>Submitted at: " + jsonStatus.inputs["submitted"];
                             }
 }
 
