@@ -60,7 +60,7 @@ function loadPreviousInputs(inputs) {
         oopt = true;
     }
     var oopt_cb = new Ext.form.Checkbox({
-        boxLabel: "Enable 'Optimal Order Preserving Transformation (OOPT)'",
+        boxLabel: "Enable Optimal Order Preserving Transformation (OOPT)",
         name: 'oopt_prev_chk',
         id: 'oopt_prev_chk',
         checked: oopt,
@@ -84,19 +84,20 @@ function loadPreviousInputs(inputs) {
     });
     eci.render();
     var cc = false;
+
     if (inputs.cc_chk == 'on') {
         cc = true;
     }
     var ecc = new Ext.form.Checkbox({
         boxLabel: "Enable Convergence Criteria",
-    name: 'cc_prev_chk',
+        name: 'cc_prev_chk',
         id: 'cc_prev_chk',
         checked: cc,
         renderTo: "results_cc"
     });
     ecc.render();
 
-    var results_cc = Ext.getDom("results_cc");
+    var results_cc = Ext.getDom("results_previnputs");
     results_cc.innerHTML = "Random Seed: " + inputs.rseed ;
     results_cc.innerHTML += "<br>Email: " + inputs.mail_address ;
     if (inputs.mode == 'SAM' || inputs.mode == 'GSEA'){
