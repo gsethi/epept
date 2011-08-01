@@ -1,5 +1,6 @@
 var updater;
 var timeSubmitted = null;
+var epeptMode = null;
 
 Ext.onReady(initPage);
 Ext.onReady(loadTheoBanner);
@@ -127,6 +128,7 @@ function loadResults() {
                 if (json.status) {
                     var now = new Date();
 		    timeSubmitted = inputs["submitted"];
+		    epeptMode = inputs["mode"];	
                     Ext.getDom("status").innerHTML = "<h3>Status: <font color='green'>EPEPT Running...</font></h3>Submitted: " + timeSubmitted + "<br>" + "Time now: " + now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
 		/*
                     var updateUri = json.status.uri;
@@ -164,7 +166,7 @@ var renderObj = {"render":function(a, o){
                                 timeCompleted = o.responseText;
                                 if (jsonStatus.error){
                                     Ext.getDom("status").innerHTML = "<h3>Status: Error</h3>Submitted on:" + timeSubmitted + " ended:" + timeCompleted + "<br>Msg:" + jsonStatus.error["message"];
-                                            showErrors(resultsUri, inputs["mode"]);
+                                            showErrors(resultsUri, epeptMode);
                                 }else{
                          	           Ext.getDom("status").innerHTML = "<h3>Status: Completed</h3>Submitted on:" + timeSubmitted + " ended:" + timeCompleted;
                                           
