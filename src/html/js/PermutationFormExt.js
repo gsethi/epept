@@ -270,7 +270,11 @@ Ext.override(Ext.form.RadioGroup, {
                                         title: '',
                                         text: 'Required: Data file with permutation values or for SAM/GSEA gene expression values'
                                     });
-                                }}
+                                },
+				change: function(t,n,o){
+					Ext.Msg.alert('info', 'Please fill in other EPEPT parameters and click the Execute button below');
+				}
+			      }
                             }),
  {
             xtype: 'radiogroup',
@@ -314,7 +318,7 @@ Ext.override(Ext.form.RadioGroup, {
                                         title: '',
                                         text: 'Required: Data file with permutation values or for SAM/GSEA gene expression values'
                                     });
-                                }}
+                                },change: function(f, n){Ext.Msg.alert("info","Please fill in other EPEPT parameters and click the Execute button below");}}
                             }),
             {xtype: 'fieldset',
             title: 'Confidence Interval Parameters',
@@ -360,7 +364,8 @@ Ext.override(Ext.form.RadioGroup, {
                                 defaultAutoCreate : {tag:"input", type:"text", size: "10", autocomplete: "off"},
                                 name: 'ci',
                                 id: 'ciId',
-                                value: '95'
+                                value: '95',
+				listeners:{change: function(f, n){alert("change");}}
                             })
 			    ]},
                             oopt_chkbx,
@@ -526,7 +531,7 @@ Ext.override(Ext.form.RadioGroup, {
                 new Ext.form.TextField({
                                 name: 'REDIRECT_TO',
                                 id: 'REDIRECT_TO',
-                                value: "/EPEPT/index.html",
+                                value: "/EPEPT/intermediate.html",
                                 hidden: true
                             })
                         ]

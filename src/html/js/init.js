@@ -1,6 +1,7 @@
 var updater;
 var timeSubmitted = null;
 var epeptMode = null;
+var resultsUri = "";
 
 Ext.onReady(initPage);
 Ext.onReady(loadTheoBanner);
@@ -113,38 +114,38 @@ function loadPreviousInputs(inputs) {
 
 function loadResults() {
     var startTime = new Date();
-    var resultsUri = get_parameter("URI");
+    resultsUri = get_parameter("URI");
     if (resultsUri) {
         Ext.Ajax.request({
             url: resultsUri + "/structured?_dc=" + Math.random(),
             method: "get",
             success: function(o) {
                 var json = Ext.util.JSON.decode(o.responseText);
-                var inputs = null;
-                if (json) {
-                    inputs = json.inputs;
-                    loadPreviousInputs(inputs);
-                }
-                if (json.status) {
-                    var now = new Date();
-		    timeSubmitted = inputs["submitted"];
-		    epeptMode = inputs["mode"];	
-                    Ext.getDom("status").innerHTML = "<h3>Status: <font color='green'>EPEPT Running...</font></h3>Submitted: " + timeSubmitted + "<br>" + "Time now: " + now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
-		/*
-                    var updateUri = json.status.uri;
-                    var updFn = function() {
-                        Ext.Ajax.request({
-                            url: updateUri + "/structured?_dc=" + Math.random(),
-                            method: "get",
-                            success: onUpdate
-                        });
-                    }*/
-                    updater = new Ext.Updater("status");
-   		    updater.setRenderer(renderObj);    
-		    updater.startAutoRefresh(2, json.status.uri + "/structured?_dc=" + Math.random());
-	
+		var uriStr = json.uri;
+		uriStr = uriStr.substring(0,uriStr.length - 7);
+		resultsUri = uriStr;
+		Ext.Ajax.request({
+	            url: uriStr + "/structured?_dc=" + Math.random(),
+        	    method: "get",
+            	success: function(o) {	
+                	json = Ext.util.JSON.decode(o.responseText);
+			var inputs = null;
+                	if (json) {
+                    		inputs = json.inputs;
+                    		loadPreviousInputs(inputs);
+                	}
+                	if (json.status) {
+                    		var now = new Date();
+		    		timeSubmitted = inputs["submitted"];
+		    		epeptMode = inputs["mode"];	
+                    		Ext.getDom("status").innerHTML = "<h3>Status: <font color='green'>EPEPT Running...</font></h3>Submitted: " + timeSubmitted + "<br>" + "Time now: " + now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
+                    		updater = new Ext.Updater("status");
+   		    		updater.setRenderer(renderObj);    
+		    		updater.startAutoRefresh(2, json.status.uri + "/structured?_dc=" + Math.random());
             }
         }
+	});
+	}
     });
   }
 }
@@ -156,7 +157,7 @@ var renderObj = {"render":function(a, o){
                 Ext.getDom("status").innerHTML = "<h3>Status: <font color='green'>EPEPT Running...</font></h3>Submitted: " + timeSubmitted + "<br>" + "Time now: " + now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
 
                 var timeCompleted = "";
-                var resultsUri = get_parameter("URI");
+                //var resultsUri = get_parameter("URI-UUID");
                 if (jsonStatus.error != null || jsonStatus.completed != null) {
                                     updater.stopAutoRefresh();
                     Ext.Ajax.request({
