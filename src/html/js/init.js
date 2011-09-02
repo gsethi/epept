@@ -100,14 +100,18 @@ function loadPreviousInputs(inputs) {
     ecc.render();
 
     var results_cc = Ext.getDom("results_previnputs");
-    results_cc.innerHTML = "Random Seed: " + inputs.rseed ;
-    results_cc.innerHTML += "<br>Email: " + inputs.mail_address ;
+    results_cc.innerHTML = "Random Seed: " + inputs.rseed;
+    var emc = "None";
+    if (inputs.mail_address && inputs.mail_address.indexOf("@") != -1){
+    	emc = "xxx@" + inputs.mail_address.split("@")[1];
+    }		
+    results_cc.innerHTML += "<br>Email: " + emc; //inputs.mail_address;
     if (inputs.mode == 'SAM' || inputs.mode == 'GSEA'){
-        results_cc.innerHTML += "<br>RespType: " + inputs.resptype ;
-        results_cc.innerHTML += "<br>NPerms: " + inputs.nperms ;
+        results_cc.innerHTML += "<br>RespType: " + inputs.resptype;
+        results_cc.innerHTML += "<br>NPerms: " + inputs.nperms;
     if (inputs.mode == 'GSEA'){
             results_cc.innerHTML += "<br>GSFile: " + "<a href=' " + uri + '/' + inputs.gsfile + "' target='_blank'>" + "&nbsp;" + inputs.gsfile + "</a>";
-            results_cc.innerHTML += "<br>GSAMethod: " + inputs.gsa_method ;
+            results_cc.innerHTML += "<br>GSAMethod: " + inputs.gsa_method;
         }
     }
 }
@@ -254,7 +258,7 @@ function showErrors(resultsUri, mode) {
             url: resultsUri + "/structured?_dc=" + Math.random(),
             method: "get",
             success: function(o) {
-                Ext.getDom("log_messages").innerHTML = "There were errors, here are the log outputs. Please email jlin@systemsbiology.org if you need more help<br><br>";
+                Ext.getDom("log_messages").innerHTML = "There were errors, here are the log outputs. Please email codefor@systemsbiology.org if you need more help<br><br>";
                 var json = Ext.util.JSON.decode(o.responseText);
                 if (json) {
                     var logs = json.logs;

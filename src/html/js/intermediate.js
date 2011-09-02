@@ -1,5 +1,4 @@
 function translate(interUri) {
-                //var interUri = get_parameter("URI");
                 Ext.Ajax.request({
                         url: interUri + "/structured?_dc=" + Math.random(),
                         method: "get",

@@ -268,12 +268,9 @@ Ext.override(Ext.form.RadioGroup, {
                                     Ext.QuickTips.register({
                                         target: c,
                                         title: '',
-                                        text: 'Required: Data file with permutation values or for SAM/GSEA gene expression values'
+                                        text: 'Required: Data file with permutation values or SAM/GSEA gene expression values. Please fill in other EPEPT parameters and click the Execute button to start service'
                                     });
-                                },
-				change: function(t,n,o){
-					Ext.Msg.alert('info', 'Please fill in other EPEPT parameters and click the Execute button below');
-				}
+                                }
 			      }
                             }),
  {
@@ -316,9 +313,9 @@ Ext.override(Ext.form.RadioGroup, {
                                     Ext.QuickTips.register({
                                         target: c,
                                         title: '',
-                                        text: 'Required: Data file with permutation values or for SAM/GSEA gene expression values'
+                                        text: 'Required: Data file with permutation values or SAM/GSEA gene expression values. Please fill in other EPEPT parameters and click the Execute button to start service'
                                     });
-                                },change: function(f, n){Ext.Msg.alert("info","Please fill in other EPEPT parameters and click the Execute button below");}}
+                                }}
                             }),
             {xtype: 'fieldset',
             title: 'Confidence Interval Parameters',
@@ -415,7 +412,7 @@ Ext.override(Ext.form.RadioGroup, {
                                     Ext.QuickTips.register({
                                         target: c,
                                         title: '',
-                                        text: 'Enter email address for system to notify you when EPEPT completes. A results URL in the email includes information your EPEPT parameters and links to output files. Your email address is completely confidential and will not be used/shared anywhere else. This browser will also automatically refresh itself while checking for new job status - browser caching must be disabled'
+                                        text: 'Enter email address to be notified upon completion, the note contains an URL to the results page with  output files and input parameters. This email address is confidential and will not be used for any other purposes.'
                                     });
                                 }
                                 }
