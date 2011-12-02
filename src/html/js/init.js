@@ -42,7 +42,7 @@ function loadTheoBanner() {
         border: true,
         deferredRender:false,
         items: [
-            { title:"<a href='http://shmulevich.systemsbiology.net/' target='_blank'>Informatics@Shmulevich Lab</a>&nbsp;&nbsp;&nbsp;<a href='http://www.systemsbiology.org' target='_blank'>Institute for Systems Biology</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href='http://code.google.com/p/epept/wiki/Manual' target='_blank'>Manual</a>&nbsp;&nbsp&nbsp;&nbsp;<a href='http://code.google.com/p/epept/wiki/ExampleDatasets' target='_blank'>Example Datasets</a>&nbsp;&nbsp&nbsp;&nbsp;<a href='http://code.google.com/p/epept/wiki/WebServiceClients' target='_blank'>Source and Web Service Client Examples</a>"  }
+            { title:"<a href='http://shmulevich.systemsbiology.net/' target='_blank'>Informatics@Shmulevich Lab</a>&nbsp;&nbsp;&nbsp;<a href='http://www.systemsbiology.org' target='_blank'>Institute for Systems Biology</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href='http://code.google.com/p/epept/wiki/Manual' target='_blank'>Manual/Help</a>&nbsp;&nbsp&nbsp;&nbsp;<a href='http://code.google.com/p/epept/wiki/ExampleDatasets' target='_blank'>Example Datasets</a>&nbsp;&nbsp&nbsp;&nbsp;<a href='http://code.google.com/p/epept/wiki/WebServiceClients' target='_blank'>Source and Web Service Client Examples</a>"  }
         ],
         renderTo: 'theo-banner'
     });
