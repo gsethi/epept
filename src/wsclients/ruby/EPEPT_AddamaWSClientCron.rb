@@ -87,7 +87,9 @@ File.open(@file_tsv) do |file|
 		puts 'job failed to complete in time allocated, sending warning email'
 		SimpleCronMail.sendErrorMessage(jsonInst['uri'])
 		abort("Job did not complete in time allocated")		
-	end
+   else
+	SimpleCronMail.sendSuccessMessage(jsonInst['uri'])
+   end
       puts 'Done running, job status ->' + @status + '-> processingOutput'
       epept_getoutput(jsonInst['uri'], @outNode)      
   end
