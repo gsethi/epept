@@ -204,6 +204,11 @@ function showOutputs(resultsUri) {
                     var xlsx = false;
                     var inputFile = inputs.filename;
                     if (outputs) {
+			var outfileName = "";
+			if (inputFile.indexOf(".") == -1){
+				//indicates no file extension use
+				outfileName = inputFile + ".txt";
+			}else{
                         var extensionIndex = inputFile.indexOf(".tsv");
                         if (extensionIndex == -1){
                            extensionIndex = inputFile.indexOf(".csv");
@@ -218,10 +223,11 @@ function showOutputs(resultsUri) {
                            }
                         }
                         if (extensionIndex == -1){
-                           xls = true;
                            extensionIndex = inputFile.indexOf(".xls");
+			   if (extensionIndex != -1)
+				xls = true;
                         }
-                        var outfileName = inputFile.substring(0, extensionIndex);
+                        outfileName = inputFile.substring(0, extensionIndex);
                         if (xls){
                            outfileName = outfileName + "_xls_";
                         }
@@ -229,7 +235,8 @@ function showOutputs(resultsUri) {
                            outfileName = outfileName + "_xlsx_";
                         }
                         outfileName = outfileName + ".txt";
-                        var fileUri = "/Pvalues_" + outfileName;
+                        }//end else
+			var fileUri = "/Pvalues_" + outfileName;
                         var labelsUri = "/labels_" + outfileName;
                         var uri = outputs.uri;
                         var fileout = uri + fileUri;
