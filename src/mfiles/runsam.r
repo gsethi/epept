@@ -1,8 +1,8 @@
 mainsam <- function(){
     print("Begin SAM");
-    .libPaths(c("/local/tknijnen/robot-cornea/R/samr/"))
+    # .libPaths(c("/local/tknijnen/robot-cornea/R/samr/"))
     library(samr);
-    .libPaths(c("/local/tknijnen/robot-cornea/R/rjson/"))
+    # .libPaths(c("/local/tknijnen/robot-cornea/R/rjson/"))
     library(rjson);
     x <- as.matrix(read.table("./inputs/samdata.txt"));
     y <- as.numeric(as.matrix(read.table("./inputs/samlabel.txt")));

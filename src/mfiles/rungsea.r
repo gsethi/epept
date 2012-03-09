@@ -1,10 +1,10 @@
 maingsea <- function(){
     print("Begin GSEA");
-    .libPaths(c("/local/tknijnen/robot-cornea/R/samr/"))
+    #.libPaths(c("/local/tknijnen/robot-cornea/R/samr/"))
     library(samr);
-    .libPaths(c("/local/tknijnen/robot-cornea/R/rjson/"))
+    #.libPaths(c("/local/tknijnen/robot-cornea/R/rjson/"))
     library(rjson);
-    .libPaths(c("/local/tknijnen/robot-cornea/R/GSA/"))
+    #.libPaths(c("/local/tknijnen/robot-cornea/R/GSA/"))
     library(GSA);
     x <- as.matrix(read.table("./inputs/gseadata.txt"));
     y <- as.numeric(as.matrix(read.table("./inputs/gsealabel.txt")));
