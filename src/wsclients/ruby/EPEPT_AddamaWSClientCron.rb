@@ -23,7 +23,7 @@ def initialize()
   @params = @argv_array[3]; #"{method:'PWM',ci_chk:'true',ci:'50',oopt_chk:'false',cc_chk:'false'}"
   @file_tsv = @argv_array[0]; #'./mymatrix.tsv'
   @formName = "" 
-  rescue Exception:
+  rescue Exception
     puts "Initialize Function failed, please check your input arguments!";
 end
 
