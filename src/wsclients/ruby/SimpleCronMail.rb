@@ -6,21 +6,13 @@ class SimpleCronMail
 		#jobid = ARGV[0]
 
 message = <<MESSAGE_END
-From: EPEPT Notifier <jlin@systemsbiology.org>
+From: EPEPT Notifier <epept_admins@systemsbiology.org>
 To: <epept_admins@systemsbiology.org>
 Subject: EPEPT might be down, cron job failed
 
 The weekly EPEPT cron job did not complete.
 The job id is #{jobid}
-Please take a look at
-romulus - 
-1. ps -ef | grep robot
-2. check workspaces - /proj/ilyalab/jlin/epept/workspace
-athena -
-1. jms
-2. jcr
-3. tomcat
-Might need to bounce robot if all services are up as jms connection might be staled
+
 MESSAGE_END
 
 		Net::SMTP.start('mailhost.systemsbiology.net') do |smtp|
@@ -32,7 +24,7 @@ MESSAGE_END
 	def self.sendSuccessMessage(jobid)
 
 message = <<MESSAGE_END
-From: EPEPT Notifier <jlin@systemsbiology.org>
+From: EPEPT Notifier <epept_admins@systemsbiology.org>
 To: <epept_admins@systemsbiology.org>
 Subject: EPEPT is good - weekly cron job passed
 
